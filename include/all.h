@@ -110,6 +110,12 @@ class Translator : public Term {
     std::vector<Term*> terms;
     std::string N;
 public:
+    ~Translator() {
+        while (terms.size()) {
+            delete terms.back();
+            terms.pop_back();
+        }
+    }
     double GetValue() {
         throw logic_error("Zachem?");
     }
