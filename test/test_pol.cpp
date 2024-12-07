@@ -8,8 +8,8 @@ TEST(Pol, 1)
     Translator A;
     A.lexical_analysis(s);
    // vector v(A.GetVector());
-    vector v1(A.GetVector());
-    vector v(Polskaya(v1));
+    vector v1 = A.GetVector();
+    vector v = Polskaya(v1);
     string s1 = ConvertForTests(v);
     int f = A.Syntax_analysis();
     string s2 = "35 45 6 - 11 / 56 * 2 0 * * + 134 + "; // важен последний пробел
