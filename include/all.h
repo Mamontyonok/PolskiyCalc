@@ -6,12 +6,9 @@
 
 using namespace std;
 
-//pair <char, int> dict[10];
 static map<char, int> dict {
     {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2},{'^', 3}, {'(', 0}
 };
-
-//создать словарь dict pair либо мапу
 
 enum types{number, operation, open_bracket, close_bracket};
 
@@ -22,8 +19,6 @@ public:
     types GetType() {
         return type;
     }
-    virtual double GetValue() = 0;
-    virtual int GetPriority() = 0; //
 };
 
 class Number:public Term {
@@ -35,9 +30,6 @@ public:
     }
     Number (double _value = 0.0):value(_value) {
         type = number;
-    }
-    int GetPriority() {
-        throw logic_error("NeNado");
     }
 };
 
@@ -57,9 +49,6 @@ public:
         priority = dict[op];
         type = operation;
     }
-    double GetValue() {
-        throw logic_error("Zachem?");
-    }
 };
 
 class Open_bracket:public Term {
@@ -71,12 +60,6 @@ public:
         type =  open_bracket;
         bracket = '(';
     }
-    double GetValue() {
-        throw logic_error("Zachem?");
-    }
-    int GetPriority() { //
-        return priority;
-    }
 };
 
 class Close_bracket:public Term {
@@ -86,12 +69,6 @@ public:
     Close_bracket() {
         type = close_bracket;
         bracket = ')';
-    }
-    double GetValue() {
-        throw logic_error("Zachem?");
-    }
-    int GetPriority() {
-        throw logic_error("NeNado");
     }
 };
 
@@ -115,12 +92,6 @@ public:
             delete terms.back();
             terms.pop_back();
         }
-    }
-    double GetValue() {
-        throw logic_error("Zachem?");
-    }
-    int GetPriority() {
-        throw logic_error("NeNado");
     }
     std::vector<Term*> GetVector() {
         return terms;
@@ -215,22 +186,16 @@ public:
 };
 
 static vector<Term*> Polskaya (vector<Term*> terms) {
-    //vector<Term*> P(terms.size());
     vector<Term*> P;
     stack<Term*> st;
-   // Term* temp = nullptr; оказалось лишней идеей (вроде бы)
     for (int i = 0; i < terms.size(); ++i) {
         if (terms[i] -> GetType() == number)
             P.push_back(terms[i]);
         if (terms[i] -> GetType() == operation) {
-            if (st.size() > 0) { //
-                //cout << st.top()->GetType() << " " << "HI" << endl;
-                //while (dict[dynamic_cast<Operation*>(terms[i]) -> GetOperation()] <= dict[dynamic_cast<Operation*>(st.top()) -> GetOperation()]) {
-                //while (dict[terms[i] -> GetType()] <= dict[st.top() -> GetType()]) {
-                while (terms[i] -> GetPriority() <= st.top() -> GetPriority()) {
+            if (st.size() > 0) {
+                while (static_cast<Operation*>(terms[i]) -> GetPriority() <= static_cast<Operation*>(st.top()) -> GetPriority()) {
                     if (st.size() > 0) { //
                         P.push_back(st.top());
-                       // temp = st.top();
                         st.pop();
                     }
                     if (st.size() == 0)
@@ -242,10 +207,6 @@ static vector<Term*> Polskaya (vector<Term*> terms) {
         if (terms[i] -> GetType() == open_bracket)
             st.push(terms[i]);
         if (terms[i] -> GetType() == close_bracket) {
-            //while (st.size() != 0) {
-            //    cout << dynamic_cast<Operation*>(st.top()) -> GetOperation() << endl;
-            //    st.pop();
-            //}
             if (st.size() > 0) { //
                 while (st.top() -> GetType() != open_bracket) {
                     P.push_back(st.top());
@@ -271,19 +232,11 @@ static double postfix_calculate(vector<Term*> terms) {
         if (current_type == number)
             st.push(terms[i]);
         if (current_type == operation) {
-            //t2 = st.top()->GetValue();
-            t2 = dynamic_cast<Number*>(st.top()) -> GetValue();
+            t2 = static_cast<Number*>(st.top()) -> GetValue();
             st.pop();
-            //t1 = st.top()->GetValue();
-            // пустой стэк, из него удалился последний элемент строчкой выше
-            if (!st.empty())
-                t1 = dynamic_cast<Number*>(st.top()) -> GetValue();
-            else {
-                cout << "HI";
-                return 0;
-            }
+            t1 = static_cast<Number*>(st.top()) -> GetValue();
             st.pop();
-            switch(dynamic_cast<Operation*>(terms[i])->GetOperation()) {
+            switch(static_cast<Operation*>(terms[i])->GetOperation()) {
                 case '+':
                     st.push(new Number(t1 + t2));
                     break;
@@ -301,5 +254,5 @@ static double postfix_calculate(vector<Term*> terms) {
             }
         }
     }
-    return (st.top()->GetValue());
+    return (static_cast<Number*>(st.top())->GetValue());
 }

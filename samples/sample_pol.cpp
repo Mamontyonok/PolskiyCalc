@@ -22,10 +22,10 @@ int main()
     cout << v.size() << endl;
     for (int i = 0; i < v.size(); i++) {
         if (v[i] -> GetType() == number)
-            cout << v[i] -> GetValue() << " ";
+            cout << static_cast<Number*>(v[i]) -> GetValue() << " ";
         if (v[i] -> GetType() == operation) {
             //cout << v[i] -> GetType() << " ";
-            cout << dynamic_cast<Operation*>(v[i]) -> GetOperation() << " ";
+            cout << static_cast<Operation*>(v[i]) -> GetOperation() << " ";
         }
     }
     cout << endl;
