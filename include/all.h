@@ -135,8 +135,35 @@ public:
             terms.push_back(new Number(std::stod(N)));
         return terms;
     }
+    
+    char GetOpenBracket(types t) { // вспомогательная функция для проверки корректности расстановки скобок
+        if (t == close_bracket)
+            return open_bracket;
+        return 0;
+    }
     int Syntax_analysis() {
-        // доделать равное кол-во открытых и закрытых скобок
+        stack<char> st;
+        bool flag = false;
+        
+        for (int i = 0 ; i < terms.size(); i++){
+            if (terms[i] -> GetType() == open_bracket)
+                st.push('(');
+            if(terms[i] -> GetType() == close_bracket){
+                if (!st.size())
+                    flag = true;
+                else{
+                    if (st.top() != GetOpenBracket(terms[i] -> GetType()))
+                        flag = true;
+                    else
+                        st.pop();
+                }
+            }
+        }
+        if(st.size() != 0)
+            flag = true;
+        if (flag == true)
+            throw logic_error("IEROGLIFS");
+
         int state;
         if (terms[0]->GetType() == number)
             state = 0;
@@ -168,17 +195,6 @@ public:
                         state = 0;
                     else state = 2;
                     break;
-             //   case 2:
-                //    if (terms[i]->GetType() == close_bracket || terms[i]->GetType() == operation)
-                 //       throw logic_error("");
-                    // update state
-                 //   if (terms[i]->GetType() == number)
-                //        state = 0;
-                //    else state = 2;
-            //    case 3:
-            //        if ({Open_bracket, number})
-             //           throw logic_error("");
-                    // update state
             }
         }
         return 1;
@@ -194,7 +210,7 @@ static vector<Term*> Polskaya (vector<Term*> terms) {
         if (terms[i] -> GetType() == operation) {
             if (st.size() > 0) {
                 while (static_cast<Operation*>(terms[i]) -> GetPriority() <= static_cast<Operation*>(st.top()) -> GetPriority()) {
-                    if (st.size() > 0) { //
+                    if (st.size() > 0) { 
                         P.push_back(st.top());
                         st.pop();
                     }
