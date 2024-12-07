@@ -4,13 +4,15 @@
 
 TEST(Pol, 1)
 {
-   // string s = "35+(45-6)/11*56*(2*0)+134"; // -2
-   // Translator A;
-    //A.lexical_analysis(s);
+    string s = "35+(45-6)/11*56*(2*0)+134"; // -2
+    Translator A;
+    A.lexical_analysis(s);
    // vector v(A.GetVector());
-   // int f = A.Syntax_analysis();
-    //string s1 = "35 45 6 - 11 / 56 * 2 0 * * + 134 +";
-   // EXPECT_EQ(1, f * (s == s1));
+    vector v(Polskaya(A.GetVector()));
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "35 45 6 - 11 / 56 * 2 0 * * + 134 + "; // важен последний пробел
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 /*TEST(Queue, can_create_queue)
 {

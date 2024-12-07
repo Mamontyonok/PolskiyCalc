@@ -266,3 +266,39 @@ static double postfix_calculate(vector<Term*> terms) {
     }
     return result;
 }
+
+static string ConvertForTests (vector <Term*> terms) {
+    string s;
+    for (int i = 0; i < terms.size(); i++) {
+        types t = terms[i] -> GetType();
+        switch(t) {
+            case number:
+                //cout << static_cast<Number*>(terms[i]) -> GetValue() << " ";
+                //костыль
+                s += to_string(static_cast<Number*>(terms[i]) -> GetValue());
+                if (s[s.size() - 1] == '0')
+                    for (size_t j = s.size() - 1; s[j] == '0'; j--)
+                        s.erase(j, 1);
+                if (s[s.size() - 1] == '.')
+                    s.erase(s.size() - 1, 1);
+                s += " ";
+                break;
+            case operation:
+                //cout << static_cast<Operation*>(terms[i]) -> GetOperation() << " ";
+                s += static_cast<Operation*>(terms[i]) -> GetOperation();
+                s += " ";
+                break;
+            case open_bracket:
+                //cout << '(' << " ";
+                s += '(';
+                s += " ";
+                break;
+            case close_bracket:
+                //cout << ')' << " ";
+                s += ')';
+                s += " ";
+                break;
+        }
+    }
+    return s;
+}
