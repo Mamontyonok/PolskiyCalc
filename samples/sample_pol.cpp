@@ -4,6 +4,7 @@ int main()
 {
     string s;
     getline(cin, s);
+    //string s = "35+(45-6)/11*56*(-2*0)+134";
     Translator A;
     A.lexical_analysis(s);
     A.Syntax_analysis();

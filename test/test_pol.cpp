@@ -2,6 +2,16 @@
 #include "all.h"
 #include <cassert>
 
+TEST(Pol, 1)
+{
+   // string s = "35+(45-6)/11*56*(2*0)+134"; // -2
+   // Translator A;
+    //A.lexical_analysis(s);
+   // vector v(A.GetVector());
+   // int f = A.Syntax_analysis();
+    //string s1 = "35 45 6 - 11 / 56 * 2 0 * * + 134 +";
+   // EXPECT_EQ(1, f * (s == s1));
+}
 /*TEST(Queue, can_create_queue)
 {
     ASSERT_NO_THROW(Queue<int> q);

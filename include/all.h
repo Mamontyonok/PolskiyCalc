@@ -72,17 +72,6 @@ public:
     }
 };
 
-/*double strtod(string s, int j) {
-    string temp;
-    int i = j - 1;
-    while (((s[i] <= '9' && s[i] >= '0') || s[i] == '.' || s[i] == ',') && i >= 0) {
-        temp.push_back(s[i]);
-        i--;
-    }
-    reverse(temp.begin(), temp.end());
-    return stod(temp);
-}*/
-
 class Translator : public Term {
     std::vector<Term*> terms;
     std::string N;
@@ -138,7 +127,7 @@ public:
     
     char GetOpenBracket(types t) { // вспомогательная функция для проверки корректности расстановки скобок
         if (t == close_bracket)
-            return open_bracket;
+            return '(';
         return 0;
     }
     int Syntax_analysis() {
@@ -238,7 +227,7 @@ static vector<Term*> Polskaya (vector<Term*> terms) {
     }
     return P;
 }
-
+// добавить обработку унарных операторов
 static double postfix_calculate(vector<Term*> terms) {
     stack<Term*> st;
     types current_type;
@@ -270,5 +259,10 @@ static double postfix_calculate(vector<Term*> terms) {
             }
         }
     }
-    return (static_cast<Number*>(st.top())->GetValue());
+    double result = static_cast<Number*>(st.top()) -> GetValue();
+    while (st.size()) {
+        delete st.top();
+        st.pop();
+    }
+    return result;
 }
