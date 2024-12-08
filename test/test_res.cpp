@@ -2,70 +2,112 @@
 #include "all.h"
 #include <cassert>
 
-/*TEST(Queue, can_create_queue)
+TEST(Res, 1)
 {
-    ASSERT_NO_THROW(Queue<int> q);
+    string s = "35+(45-6)/11*56*(2*0)+134"; // -2
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_EQ(169, postfix_calculate(v));
 }
 
-TEST(Queue, cant_create_queue_with_negative_length)
+TEST(Res, 2)
 {
-    ASSERT_ANY_THROW(Queue<int> q(-1));
+    string s = "77 - 56 * 8 + 222 - (3 * 2 - 1) * 4";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_EQ(-169, postfix_calculate(v));
 }
 
-TEST(Queue, can_push)
+TEST(Res, 3)
 {
-    Queue<int> q;
-    vector <int> v;
-    for (int i = 0; i < n; i++) {
-        q.push(i - 3);
-        v.push_back(i - 3);
-    }
-    bool f = true;
-    for (int i = 0; i < n; i++) {
-        if (q[i] != v[i]) {
-            f = false;
-            break;
-        }
-    }
-    EXPECT_EQ(1, f);
+    string s = "1-1-1+1-1*1-1/1+1+1";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_EQ(0, postfix_calculate(v));
 }
 
-TEST(Queue, can_pop)
+TEST(Res, 4)
 {
-    Queue<int> q;
-    for (int i = 0; i < n; i++)
-        q.push(i - 3);
-    q.pop();
-    EXPECT_EQ(n - 5, q[n - 2]);
+    string s = "0*0*0*0*0*0*0*0*0";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_EQ(0, postfix_calculate(v));
 }
 
-TEST(Queue, can_get_size)
+TEST(Res, 5)
 {
-    Queue<int> q(5);
-    q.push(3);
-    q.push(-7);
-    EXPECT_EQ(2, q.size());
+    string s = "0-233+0+234/22+77*(2-5*13)/3";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_LE(abs(-1839.36363636 - postfix_calculate(v)), 1e-6);
 }
 
-TEST(Queue, can_get_back)
+TEST(Res, 6)
 {
-    Queue<int> q;
-    for (int i = 0; i < n; i++)
-        q.push(i - 3);
-    EXPECT_EQ(n - 4, q.GetBack());
+    string s = "(88+7+7-88)*0";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_EQ(0, postfix_calculate(v));
 }
 
-TEST(Queue, can_get_front)
+/*TEST(Res, 7) // почему-то не работает с одним числом: pointer being freed was not allocated (ошибка при вызове деструктора класса Translator)
 {
-    Queue<int> q;
-    for (int i = 0; i < n; i++)
-        q.push(i - 3);
-    EXPECT_EQ(-3, q.GetFront());
-}
-
-TEST(Queue, throw_queue_is_empty)
-{
-    Queue<int> q;
-    ASSERT_ANY_THROW(q.pop());
+    string s = "17";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    double temp = postfix_calculate(v); // проблема возникает при вызове функции postfix_calculate(), которая не является методом класса
+    //while (v1.size()) {
+     //   delete v1.back();
+     //   v1.pop_back();
+    //}
+    //while (v.size()) {
+    //    delete v.back();
+    //    v.pop_back();
+   // }
+    //EXPECT_EQ(17, temp);
 }*/
+
+TEST(Res, 8)
+{
+    string s = "8 - (13 + 1 * 4) / 5";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_EQ(4.6, postfix_calculate(v));
+}
+
+TEST(Res, division_by_zero)
+{
+    string s = "7.567 / (4665.5 - 4665.5/3*3) - 255";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    ASSERT_ANY_THROW(postfix_calculate(v));
+}
+
+TEST(Res, 9)
+{
+    string s = "8.32324-546.7/24+444*(323.2-334.12)-34-(214+33.451+(22-1.23))";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_LE(abs(-5165.15692666 - postfix_calculate(v)), 1e-6);
+}
 

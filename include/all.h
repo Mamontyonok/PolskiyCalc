@@ -120,8 +120,10 @@ public:
                 }
             }
         }
-        if (N.size() > 0)
+        if (N.size()) {
             terms.push_back(new Number(std::stod(N)));
+            N = string();
+        }
         return terms;
     }
     
@@ -253,7 +255,7 @@ static double postfix_calculate(vector<Term*> terms) {
                     break;
                 case '/':
                     if (t2 == 0)
-                        throw logic_error("division on zero");
+                        throw logic_error("division by zero");
                     st.push(new Number(t1 / t2));
                     break;
             }
@@ -274,7 +276,7 @@ static string ConvertForTests (vector <Term*> terms) {
         switch(t) {
             case number:
                 //cout << static_cast<Number*>(terms[i]) -> GetValue() << " ";
-                //костыль
+                //костыль, но так как необходим исключительно для тестов, то ничего страшного
                 s += to_string(static_cast<Number*>(terms[i]) -> GetValue());
                 if (s[s.size() - 1] == '0')
                     for (size_t j = s.size() - 1; s[j] == '0'; j--)

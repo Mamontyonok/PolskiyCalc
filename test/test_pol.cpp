@@ -7,7 +7,6 @@ TEST(Pol, 1)
     string s = "35+(45-6)/11*56*(2*0)+134"; // -2
     Translator A;
     A.lexical_analysis(s);
-   // vector v(A.GetVector());
     vector<Term*> v1 = A.GetVector();
     vector<Term*> v = Polskaya(v1);
     string s1 = ConvertForTests(v);
@@ -15,70 +14,135 @@ TEST(Pol, 1)
     string s2 = "35 45 6 - 11 / 56 * 2 0 * * + 134 + "; // важен последний пробел
     EXPECT_EQ(1, f * (s1 == s2));
 }
-/*TEST(Queue, can_create_queue)
+TEST(Pol, incorrect_entry_1)
 {
-    ASSERT_NO_THROW(Queue<int> q);
+    string s = "44 - 58 * 33 - 9 ++ 5";
+    Translator A;
+    A.lexical_analysis(s);
+    ASSERT_ANY_THROW(A.Syntax_analysis());
 }
 
-TEST(Queue, cant_create_queue_with_negative_length)
+TEST(Pol, 2)
 {
-    ASSERT_ANY_THROW(Queue<int> q(-1));
+    string s = "77 - 56 * 8 + 222 - (3 * 2 - 1) * 4";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "77 56 8 * - 222 + 3 2 * 1 - 4 * - ";
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 
-TEST(Queue, can_push)
+TEST(Pol, 3)
 {
-    Queue<int> q;
-    vector <int> v;
-    for (int i = 0; i < n; i++) {
-        q.push(i - 3);
-        v.push_back(i - 3);
-    }
-    bool f = true;
-    for (int i = 0; i < n; i++) {
-        if (q[i] != v[i]) {
-            f = false;
-            break;
-        }
-    }
-    EXPECT_EQ(1, f);
+    string s = "1-1-1+1-1*1-1/1+1+1";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "1 1 - 1 - 1 + 1 1 * - 1 1 / - 1 + 1 + ";
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 
-TEST(Queue, can_pop)
+TEST(Pol, 4)
 {
-    Queue<int> q;
-    for (int i = 0; i < n; i++)
-        q.push(i - 3);
-    q.pop();
-    EXPECT_EQ(n - 5, q[n - 2]);
+    string s = "0*0*0*0*0*0*0*0*0";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "0 0 * 0 * 0 * 0 * 0 * 0 * 0 * 0 * ";
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 
-TEST(Queue, can_get_size)
+TEST(Pol, 5)
 {
-    Queue<int> q(5);
-    q.push(3);
-    q.push(-7);
-    EXPECT_EQ(2, q.size());
+    string s = "0-233+0+234/22+77*(2-5*13)/3";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "0 233 - 0 + 234 22 / + 77 2 5 13 * - * 3 / + ";
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 
-TEST(Queue, can_get_back)
+TEST(Pol, 6)
 {
-    Queue<int> q;
-    for (int i = 0; i < n; i++)
-        q.push(i - 3);
-    EXPECT_EQ(n - 4, q.GetBack());
+    string s = "(88+7+7-88)*0";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "88 7 + 7 + 88 - 0 * ";
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 
-TEST(Queue, can_get_front)
+TEST(Pol, 7)
 {
-    Queue<int> q;
-    for (int i = 0; i < n; i++)
-        q.push(i - 3);
-    EXPECT_EQ(-3, q.GetFront());
+    string s = "17";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "17 ";
+    EXPECT_EQ(1, f * (s1 == s2));
 }
 
-TEST(Queue, throw_queue_is_empty)
+TEST(Pol, 8)
 {
-    Queue<int> q;
-    ASSERT_ANY_THROW(q.pop());
-}*/
+    string s = "8 - (13 + 1 * 4) / 5";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "8 13 1 4 * + 5 / - ";
+    EXPECT_EQ(1, f * (s1 == s2));
+}
 
+TEST(Pol, 9)
+{
+    string s = "7.567 / (4665.5 - 4665.5/3*3) - 255";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "7.567 4665.5 4665.5 3 / 3 * - / 255 - ";
+    EXPECT_EQ(1, f * (s1 == s2));
+}
+
+TEST(Pol, 10)
+{
+    string s = "8.32324-546.7/24+444*(323.2-334.12)-34-(214+33.451+(22-1.23))";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "8.32324 546.7 24 / - 444 323.2 334.12 - * + 34 - 214 33.451 + 22 1.23 - + - ";
+    EXPECT_EQ(1, f * (s1 == s2));
+}
+
+TEST(Pol, incorrect_entry_2)
+{
+    string s = "8.32324-546.7/24+444*(323.2-334.12)-34-(214+33.451+((22-1.23))";
+    Translator A;
+    A.lexical_analysis(s);
+    ASSERT_ANY_THROW(A.Syntax_analysis());
+}
