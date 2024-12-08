@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <map>
@@ -262,10 +263,10 @@ static double postfix_calculate(vector<Term*> terms) {
         }
     }
     double result = static_cast<Number*>(st.top()) -> GetValue();
-    while (st.size()) {
-        delete st.top();
-        st.pop();
-    }
+    //while (st.size()) {
+      //  delete st.top();
+      //  st.pop();
+  //  }
     return result;
 }
 
