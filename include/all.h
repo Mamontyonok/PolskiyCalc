@@ -8,6 +8,17 @@
 
 using namespace std;
 
+static double binpow (double a, int n) {
+    double res = 1;
+    while (n) {
+        if (n & 1)
+            res *= a;
+        a *= a;
+        n >>= 1;
+    }
+    return res;
+}
+
 static map<char, int> dict {
     {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}, {'(', 0}
 };
@@ -255,7 +266,9 @@ static double postfix_calculate(vector<Term*> terms) {
                     st.push(new Number(t1 * t2));
                     break;
                 case '^':
-                    st.push(new Number(pow(t1, t2))); // возможно добавить проверку на отрицательность t1 и целое ли t2
+                    if(abs(round(t2) - t2) < 1e-9) // проверка, целое ли t2?
+                        st.push(new Number(binpow(t1, t2)));
+                    else st.push(new Number(pow(t1, t2)));
                     break;
                 case '/':
                     if (t2 == 0)
