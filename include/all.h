@@ -4,6 +4,7 @@
 #include <map>
 #include <stack>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
