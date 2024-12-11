@@ -266,7 +266,7 @@ static double postfix_calculate(vector<Term*> terms) {
                     st.push(new Number(t1 * t2));
                     break;
                 case '^':
-                    if(abs(round(t2) - t2) < 1e-9) // проверка, целое ли t2?
+                    if(abs(round(t2) - t2) < 1e-9 && t2 >= 0) // проверка, натуральное(или 0) ли t2?
                         st.push(new Number(binpow(t1, t2)));
                     else st.push(new Number(pow(t1, t2)));
                     break;
