@@ -139,6 +139,19 @@ TEST(Pol, 10)
     EXPECT_EQ(1, f * (s1 == s2));
 }
 
+TEST(Pol, 11)
+{
+    string s = "5324^4+4365-88+0-(34/2)^2";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    string s1 = ConvertForTests(v);
+    int f = A.Syntax_analysis();
+    string s2 = "5324 4 ^ 4365 + 88 - 0 + 34 2 / 2 ^ - ";
+    EXPECT_EQ(1, f * (s1 == s2));
+}
+
 TEST(Pol, incorrect_entry_2)
 {
     string s = "8.32324-546.7/24+444*(323.2-334.12)-34-(214+33.451+((22-1.23))";

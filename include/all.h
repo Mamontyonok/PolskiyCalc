@@ -8,7 +8,7 @@
 using namespace std;
 
 static map<char, int> dict {
-    {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2},{'^', 3}, {'(', 0}
+    {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}, {'(', 0}
 };
 
 enum types{number, operation, open_bracket, close_bracket};
@@ -48,7 +48,6 @@ public:
     Operation(char _op):op(_op) {
         type = operation;
         priority = dict[op];
-        type = operation;
     }
 };
 
@@ -95,7 +94,7 @@ public:
                     terms.push_back(new Open_bracket());
                 if (str[i] == ')')
                     terms.push_back(new Close_bracket());
-                if (str[i] == '*' || str[i] == '/' || str[i] == '+' || str[i] == '-')
+                if (str[i] == '*' || str[i] == '/' || str[i] == '+' || str[i] == '-' || str[i] == '^')
                     terms.push_back(new Operation(str[i]));
                 if (str[i] >= '0' && str[i] <= '9') {
                     number_status = 1;
@@ -112,7 +111,7 @@ public:
                     terms.push_back(new Close_bracket());
                     N = string();
                 }
-                if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/') {
+                if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '^') {
                     number_status = 0;
                     terms.push_back(new Number(std::stod(N)));
                     //terms.push_back(new Number(strtod(str, i)));
@@ -253,6 +252,9 @@ static double postfix_calculate(vector<Term*> terms) {
                     break;
                 case '*':
                     st.push(new Number(t1 * t2));
+                    break;
+                case '^':
+                    st.push(new Number(pow(t1, t2))); // возможно добавить проверку на отрицательность t1 и целое ли t2
                     break;
                 case '/':
                     if (t2 == 0)

@@ -105,3 +105,12 @@ TEST(Res, 9)
     EXPECT_LE(abs(-5165.15692666 - postfix_calculate(v)), 1e-6);
 }
 
+TEST(Res, 10)
+{
+    string s = "5324^4+4365-88+0-(34/2)^2";
+    Translator A;
+    A.lexical_analysis(s);
+    vector<Term*> v1 = A.GetVector();
+    vector<Term*> v = Polskaya(v1);
+    EXPECT_LE(abs(803437664444564 - postfix_calculate(v)), 1e-6);
+}
