@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <stack>
+#include "stack.h"
 #include <string>
 #include <math.h>
 
@@ -150,7 +150,7 @@ public:
         return 0;
     }
     int Syntax_analysis() {
-        stack<char> st;
+        Stack<char> st;
         bool flag = false;
         
         for (int i = 0 ; i < terms.size(); i++){
@@ -229,7 +229,7 @@ public:
 
 static vector<Term*> Polskaya (vector<Term*> terms) {
     vector<Term*> P;
-    stack<Term*> st;
+    Stack<Term*> st;
     for (int i = 0; i < terms.size(); ++i) {
         if (terms[i] -> GetType() == number)
             P.push_back(terms[i]);
@@ -266,7 +266,7 @@ static vector<Term*> Polskaya (vector<Term*> terms) {
 }
 // добавить обработку унарных операторов
 static double postfix_calculate(vector<Term*> terms) {
-    stack<Term*> st;
+    Stack<Term*> st;
     types current_type;
     double t1, t2;
     for (int i = 0; i < terms.size(); i++) {
