@@ -84,7 +84,7 @@ public:
     }
 };
 
-class Translator : public Term {
+class Translator {
     std::vector<Term*> terms;
     std::string N;
 public:
@@ -121,6 +121,11 @@ public:
                     terms.push_back(new Number(std::stod(N)));
                     //terms.push_back(new Number(strtod(str, i)));
                     terms.push_back(new Close_bracket());
+                    N = string();
+                }
+                if (str[i] == '(') {
+                    terms.push_back(new Number(std::stod(N)));
+                    terms.push_back(new Open_bracket());
                     N = string();
                 }
                 if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '^') {
@@ -180,26 +185,44 @@ public:
             state = 3;
             throw logic_error("oops");
         }
-        for (int i = 1; i < terms.size(); i++) {
-            switch(state) {
+        for (int i = 1; i < terms.size() - 1; i++) {
+            if (terms.size() != i - 1)
+                switch(state) {
+                    case 0:
+                        if (terms[i]->GetType() == open_bracket || terms[i]->GetType() == number)
+                            throw logic_error("oops");
+                        //обновляем state
+                        if (terms[i]->GetType() == operation)
+                            state = 1;
+                        else state = 3;
+                        break;
+                    case 1:
+                        if (terms[i]->GetType() == operation || terms[i]->GetType() == close_bracket)
+                            throw logic_error("oops");
+                        //обновляем state
+                        if (terms[i]->GetType() == number)
+                            state = 0;
+                        else state = 2;
+                        break;
+                }
+            else switch(state) {
                 case 0:
-                    if (terms[i]->GetType() == open_bracket || terms[i]->GetType() == number)
+                    if (terms[i] -> GetType() != close_bracket)
                         throw logic_error("oops");
-                    //обновляем state
-                    if (terms[i]->GetType() == operation)
-                        state = 1;
-                    else state = 3;
                     break;
                 case 1:
-                    if (terms[i]->GetType() == operation || terms[i]->GetType() == close_bracket)
+                    if (terms[i] -> GetType() != number)
                         throw logic_error("oops");
-                    //обновляем state
-                    if (terms[i]->GetType() == number)
-                        state = 0;
-                    else state = 2;
+                    break;
+                case 2:
+                    throw logic_error("oops");
+                    break;
+                case 3:
+                    throw logic_error("oops");
                     break;
             }
         }
+        
         return 1;
     }
 };
@@ -235,7 +258,7 @@ static vector<Term*> Polskaya (vector<Term*> terms) {
             }
         }
     }
-    while (st.size() != 0) {
+    while (st.size()) {
         P.push_back(st.top());
         st.pop();
     }
@@ -249,7 +272,7 @@ static double postfix_calculate(vector<Term*> terms) {
     for (int i = 0; i < terms.size(); i++) {
         current_type = terms[i]->GetType();
         if (current_type == number)
-            st.push(terms[i]);
+            st.push(new Number(static_cast<Number*>(terms[i]) -> GetValue()));
         if (current_type == operation) {
             t2 = static_cast<Number*>(st.top()) -> GetValue();
             st.pop();
@@ -279,10 +302,10 @@ static double postfix_calculate(vector<Term*> terms) {
         }
     }
     double result = static_cast<Number*>(st.top()) -> GetValue();
-    //while (st.size()) {
-      //  delete st.top();
-      //  st.pop();
-  //  }
+    while (st.size()) {
+        delete st.top();
+        st.pop();
+    }
     return result;
 }
 
