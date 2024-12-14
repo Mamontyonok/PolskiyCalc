@@ -62,17 +62,15 @@ TEST(Res, 6)
     EXPECT_EQ(0, postfix_calculate(v));
 }
 
-TEST(Res, 7) // почему-то не работает с одним числом: pointer being freed was not allocated (ошибка при вызове деструктора класса Translator)
+TEST(Res, 7)
 {
     string s = "17";
     Translator A;
     A.lexical_analysis(s);
     vector<Term*> v1 = A.GetVector();
     vector<Term*> v = Polskaya(v1);
-    double temp = postfix_calculate(v); // проблема возникает при вызове функции postfix_calculate(), которая не является методом класса
+    double temp = postfix_calculate(v);
     EXPECT_EQ(17, temp);
-    //Решил проблему, убрав очистку стэка в функции postfix_calculate(). Получалось, что число удалялось дважды, так как элементы стэка и массива - это указатели на term. 
-    //Но непонятно, почему в других тестах это работало без ошибок?
 }
 
 TEST(Res, 8)
