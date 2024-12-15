@@ -185,8 +185,8 @@ public:
             state = 3;
             throw logic_error("oops");
         }
-        for (int i = 1; i < terms.size() - 1; i++) {
-            if (terms.size() != i - 1)
+        for (int i = 1; i < terms.size(); i++) {
+            if (i != terms.size() - 1)
                 switch(state) {
                     case 0:
                         if (terms[i]->GetType() == open_bracket || terms[i]->GetType() == number)
@@ -213,12 +213,6 @@ public:
                 case 1:
                     if (terms[i] -> GetType() != number)
                         throw logic_error("oops");
-                    break;
-                case 2:
-                    throw logic_error("oops");
-                    break;
-                case 3:
-                    throw logic_error("oops");
                     break;
             }
         }
