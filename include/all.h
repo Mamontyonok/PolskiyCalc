@@ -204,6 +204,20 @@ public:
                             state = 0;
                         else state = 2;
                         break;
+                    case 2:
+                        if (terms[i] -> GetType() == operation || terms[i] -> GetType() == close_bracket)
+                            throw logic_error("oops");
+                        if (terms[i] -> GetType() == number)
+                            state = 0;
+                        else state = 2;
+                        break;
+                    case 3:
+                        if (terms[i] -> GetType() == open_bracket || terms[i] -> GetType() == number)
+                            throw logic_error("oops");
+                        if (terms[i] -> GetType() == operation)
+                            state = 1;
+                        else state = 3;
+                        break;
                 }
             else switch(state) {
                 case 0:
@@ -212,6 +226,13 @@ public:
                     break;
                 case 1:
                     if (terms[i] -> GetType() != number)
+                        throw logic_error("oops");
+                    break;
+                case 2:
+                    throw logic_error("oops");
+                    break;
+                case 3:
+                    if (terms[i] -> GetType() != close_bracket)
                         throw logic_error("oops");
                     break;
             }
